@@ -2,12 +2,14 @@
 import subprocess
 
 class rofi_python:
-    """Use python to run Rofi and get output from it."""
+    """Use python to run Rofi and get output from it.
+       You must pass the entire rofi command as an argument."""
+
     def __init__(self):
         pass 
     
     def __process_rofi_output(self, s):
-        """Private method to process Rofi's output and return data in the form of (last_query, results)"""
+        """Private method to process Rofi's output and return data in the form of (last_query [string], results [list])"""
         ts=s.split('\n')
         strings=[]
 
@@ -41,9 +43,11 @@ class rofi_python:
         s=p.communicate()[0].decode('utf-8')
         return __process_rofi_output(s)
 
-    def dump(self, rofi_command, inputs, rofi_search):
+
+    def dump(self, rofi_command, inputs, rofi_search_text):
         """Run Rofi with rofi_command (a string), inputs (a list of choices), and rofi_search (the search text)
-           Returns inputs, filtered using rofi_search"""
+           Returns inputs, filtered using rofi_search
+           Don't pass the -dump argument, or the -filter argument. Both of these are added to your rofi command automatically."""
         rofi_command += " -dump"
         rofi_command += " -filter " + rofi_search_text
         p = subprocess.Popen(rofi_command.split(), stdout = subprocess.PIPE, stdin = subprocess.PIPE)
